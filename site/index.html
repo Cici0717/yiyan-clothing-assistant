@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="衣研是一款本地运行的服饰百科与网购助手，帮助你看懂材质标签、比较尺寸并积累自己的穿着经验。"
+    />
+    <meta name="theme-color" content="#0b1830" />
+    <title>衣研｜服饰百科与网购助手</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b1830'/%3E%3Cpath d='M16 19h32v8H36v22h-8V27H16z' fill='%23f6c453'/%3E%3Ccircle cx='44' cy='43' r='6' fill='%233f67ff'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">跳到主要内容</a>
+
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="主导航">
+        <button class="brand" type="button" data-route="home" aria-label="返回首页">
+          <span class="brand-mark" aria-hidden="true">衣</span>
+          <span><strong>衣研</strong><small>穿得明白，也穿得像自己</small></span>
+        </button>
+
+        <nav class="side-nav">
+          <button class="nav-item is-active" type="button" data-route="home"><span>首页</span><small>开始一次判断</small></button>
+          <button class="nav-item" type="button" data-route="materials"><span>材质百科</span><small>查成分与取舍</small></button>
+          <button class="nav-item" type="button" data-route="label"><span>标签解读</span><small>看懂名称和比例</small></button>
+          <button class="nav-item" type="button" data-route="fit"><span>尺寸参谋</span><small>和合身衣物比较</small></button>
+          <button class="nav-item" type="button" data-route="style"><span>配色与风格</span><small>探索个人偏好</small></button>
+          <button class="nav-item" type="button" data-route="wardrobe"><span>我的衣橱</span><small>留下真实体验</small></button>
+          <button class="nav-item" type="button" data-route="profile"><span>个人档案</span><small>尺寸与穿着偏好</small></button>
+        </nav>
+
+        <div class="privacy-note">
+          <span class="privacy-icon" aria-hidden="true">◒</span>
+          <div><strong>仅存于这台设备</strong><small>资料保存在当前浏览器，可随时导出或清除。</small></div>
+        </div>
+      </aside>
+
+      <header class="mobile-header">
+        <button class="brand compact" type="button" data-route="home" aria-label="返回首页">
+          <span class="brand-mark" aria-hidden="true">衣</span><strong>衣研</strong>
+        </button>
+        <button class="quiet-button" type="button" data-route="wardrobe">我的衣橱 <span id="mobile-count">0</span></button>
+      </header>
+
+      <nav class="mobile-nav" aria-label="移动端主导航">
+        <button class="is-active" type="button" data-route="home">首页</button>
+        <button type="button" data-route="materials">材质</button>
+        <button type="button" data-route="label">标签</button>
+        <button type="button" data-route="fit">尺寸</button>
+        <button type="button" data-route="style">配色</button>
+        <button type="button" data-route="wardrobe">衣橱</button>
+        <button type="button" data-route="profile">档案</button>
+      </nav>
+
+      <main id="main-content" tabindex="-1">
+        <section class="page is-active" data-page="home" aria-labelledby="home-title">
+          <div class="home-hero">
+            <div class="hero-copy">
+              <p class="eyebrow">服饰百科 · 网购参谋 · 个人衣橱</p>
+              <h1 id="home-title"><span>这件衣服，</span><span>适不适合你？</span></h1>
+              <p class="hero-intro">从一个材质词、一张标签或一件合身衣服开始。衣研把零散信息整理成你能看懂、能比较、下次还能用的参考。</p>
+
+              <form id="global-search-form" class="search-box" role="search">
+                <label for="global-search">我想查</label>
+                <div class="search-row">
+                  <input id="global-search" type="search" autocomplete="off" placeholder="试试：冰丝、95%棉、裤长 100 cm" />
+                  <button class="primary-button" type="submit">开始查询</button>
+                </div>
+                <div class="search-examples" aria-label="搜索示例">
+                  <span>常见问题</span>
+                  <button type="button" data-search-example="纯棉和全棉">纯棉和全棉</button>
+                  <button type="button" data-search-example="莫代尔">莫代尔</button>
+                  <button type="button" data-search-example="聚酯纤维">聚酯纤维</button>
+                </div>
+              </form>
+              <div id="home-search-results" class="home-search-results" aria-live="polite"></div>
+            </div>
+            <figure class="hero-visual">
+              <img src="assets/textile-editorial.png" alt="棉、麻等布料样本、色卡和软尺摆放在深蓝色桌面上" />
+              <figcaption><span>判断一件衣服</span><strong>成分只是起点</strong><small>织法、厚薄、版型和你的真实体验同样重要。</small></figcaption>
+            </figure>
+          </div>
+
+          <div class="task-strip" aria-label="常用功能">
+            <button type="button" data-route="materials"><span class="task-index">01</span><strong>查材质</strong><small>了解特点、取舍与选购检查项</small></button>
+            <button type="button" data-route="label"><span class="task-index">02</span><strong>读标签</strong><small>整理成分比例，发现缺失信息</small></button>
+            <button type="button" data-route="fit"><span class="task-index">03</span><strong>比尺寸</strong><small>拿合身衣物与待购商品作比较</small></button>
+            <button type="button" data-route="wardrobe"><span class="task-index">04</span><strong>记体验</strong><small>保存试穿、洗后表现与回购判断</small></button>
+          </div>
+
+          <div class="home-grid section-block">
+            <section class="panel panel-dark" aria-labelledby="today-title">
+              <div class="section-heading invert">
+                <div><p class="eyebrow">先记住这一条</p><h2 id="today-title">名字像，不代表成分一样</h2></div>
+              </div>
+              <p>“100%棉”“棉100%”“纯棉”“全棉”在规范标注中表达的是同一种成分关系，不能根据文字顺序判断真假。看到“云朵棉”“冰丝”等名称时，仍要回到水洗标查看规范纤维名称与比例。</p>
+              <button class="text-button light" type="button" data-route="label">打开标签解读</button>
+            </section>
+            <section class="panel personal-snapshot" aria-labelledby="snapshot-title">
+              <div class="section-heading"><div><p class="eyebrow">你的穿着线索</p><h2 id="snapshot-title">从真实体验长出来</h2></div></div>
+              <div id="home-snapshot" class="snapshot-content"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="page" data-page="materials" aria-labelledby="materials-title" hidden>
+          <header class="page-header">
+            <div><p class="eyebrow">Material index</p><h1 id="materials-title">材质百科</h1><p>先看懂纤维，再结合织法、厚薄和使用场景判断一件具体衣服。</p></div>
+            <div class="page-stat"><strong id="material-count">10</strong><span>个基础词条</span></div>
+          </header>
+
+          <div class="toolbar sticky-toolbar">
+            <label class="field grow"><span>搜索材质或常见名称</span><input id="material-search" type="search" placeholder="例如：天丝、涤纶、羊绒" /></label>
+            <label class="field"><span>分类</span><select id="material-filter"><option value="all">全部</option><option value="天然植物纤维">天然植物纤维</option><option value="天然动物纤维">天然动物纤维</option><option value="再生纤维素纤维">再生纤维素纤维</option><option value="合成纤维">合成纤维</option></select></label>
+          </div>
+
+          <div class="material-layout">
+            <div id="material-grid" class="material-grid" aria-live="polite"></div>
+            <aside class="compare-dock" aria-labelledby="compare-title">
+              <div><p class="eyebrow">Compare</p><h2 id="compare-title">材质比较</h2><p>勾选 2–3 种材质，在相同维度下查看差异。</p></div>
+              <div id="compare-selection" class="compare-selection"><p class="empty-copy">还没有选择材质。</p></div>
+              <button id="show-compare" class="secondary-button full" type="button" disabled>查看比较</button>
+            </aside>
+          </div>
+          <div id="material-compare-output" class="compare-output" hidden></div>
+        </section>
+
+        <section class="page" data-page="label" aria-labelledby="label-title" hidden>
+          <header class="page-header compact-header">
+            <div><p class="eyebrow">Label reader</p><h1 id="label-title">标签解读</h1><p>把商品描述或水洗标文字贴进来，先整理已知信息，再列出仍需确认的部分。</p></div>
+          </header>
+
+          <div class="split-workspace">
+            <section class="work-card" aria-labelledby="label-input-title">
+              <div class="card-number">01</div>
+              <h2 id="label-input-title">输入标签文字</h2>
+              <p class="helper">当前版本不读取图片，请手动输入或粘贴。原文只在当前页面处理。</p>
+              <label class="field"><span>标签或商品描述</span><textarea id="label-input" rows="9" placeholder="例如：面料 棉95% 氨纶5%；里料 聚酯纤维100%"></textarea></label>
+              <div class="example-row">
+                <span>填入示例</span>
+                <button type="button" data-label-example="面料：棉95%，氨纶5%；里料：聚酯纤维100%">棉＋氨纶</button>
+                <button type="button" data-label-example="商品名：云朵棉家居服；水洗标：聚酯纤维92%，氨纶8%">宣传名与成分</button>
+                <button type="button" data-label-example="面料：全棉；建议手洗，不可漂白">全棉</button>
+              </div>
+              <button id="analyze-label" class="primary-button full" type="button">整理这张标签</button>
+            </section>
+
+            <section class="result-card" aria-labelledby="label-result-title">
+              <div class="card-number">02</div>
+              <h2 id="label-result-title">解读结果</h2>
+              <div id="label-result" class="empty-state">
+                <span class="empty-mark" aria-hidden="true">%</span>
+                <strong>等待一张标签</strong>
+                <p>我们会区分成分、比例、商品用语和缺失信息，不会仅凭文字判断实物真假。</p>
+              </div>
+            </section>
+          </div>
+
+          <aside class="source-note">
+            <strong>规范提示</strong>
+            <p>“100%棉”“棉100%”“纯棉”“全棉”在适用规范中表达相同的单一纤维组成关系。宣传文字与实物成分是否一致，需要检测或其他证据，网页不能仅凭截图鉴定。</p>
+            <a href="https://scjgj.quanzhou.gov.cn/xxgk/ztzl/xfts/xfjs/202601/t20260113_3254047.htm" target="_blank" rel="noreferrer">查看参考来源</a>
+          </aside>
+        </section>
+
+        <section class="page" data-page="fit" aria-labelledby="fit-title" hidden>
+          <header class="page-header">
+            <div><p class="eyebrow">Fit desk</p><h1 id="fit-title">尺寸参谋</h1><p>优先和一件穿着效果已知的同类衣物比较。相同尺码字母，不代表相同大小。</p></div>
+            <button class="secondary-button" type="button" data-route="wardrobe" data-open-record>添加参照衣物</button>
+          </header>
+
+          <div class="fit-tabs" role="tablist" aria-label="比较品类">
+            <button class="is-active" type="button" role="tab" aria-selected="true" data-fit-type="top">上衣</button>
+            <button type="button" role="tab" aria-selected="false" data-fit-type="pants">裤装</button>
+            <button type="button" role="tab" aria-selected="false" data-fit-type="shoes">鞋子</button>
+          </div>
+
+          <div class="fit-grid">
+            <section class="measure-card reference-card" aria-labelledby="ref-title">
+              <p class="card-kicker">A · 已知参照</p>
+              <h2 id="ref-title">穿过的那件</h2>
+              <label class="field"><span>从衣橱选择</span><select id="reference-record"><option value="">手动填写</option></select></label>
+              <div id="reference-fields" class="measure-fields"></div>
+            </section>
+
+            <section class="measure-card target-card" aria-labelledby="target-title">
+              <p class="card-kicker">B · 待购商品</p>
+              <h2 id="target-title">正在考虑的这件</h2>
+              <div class="inline-fields"><label class="field"><span>商品名称</span><input id="target-name" type="text" placeholder="例如：蓝色落肩 T 恤" /></label><label class="field short"><span>尺码</span><input id="target-size" type="text" placeholder="M" /></label></div>
+              <div id="target-fields" class="measure-fields"></div>
+            </section>
+          </div>
+
+          <div class="fit-actions"><button id="compare-fit" class="primary-button" type="button">比较尺寸</button><button id="reset-fit" class="ghost-button" type="button">清空</button></div>
+          <section id="fit-result" class="fit-result empty-state" aria-live="polite">
+            <span class="empty-mark" aria-hidden="true">cm</span><strong>填入相同测量口径的数据</strong><p>平铺宽度与整圈围度、裤内长与裤外长不会混合计算。</p>
+          </section>
+          <section class="recent-comparisons section-block" aria-labelledby="recent-title">
+            <div class="section-heading"><div><p class="eyebrow">Saved comparisons</p><h2 id="recent-title">最近的比较</h2></div></div>
+            <div id="comparison-list" class="comparison-list"></div>
+          </section>
+        </section>
+
+        <section class="page" data-page="style" aria-labelledby="style-title" hidden>
+          <header class="page-header">
+            <div><p class="eyebrow">Colour & style</p><h1 id="style-title">配色与风格探索</h1><p>肤色信息只是一条线索。你喜欢、愿意穿并在真实场景中感觉自在，才是更长期的依据。</p></div>
+            <div class="page-stat"><strong id="favorite-count">0</strong><span>组已收藏配色</span></div>
+          </header>
+
+          <div class="style-workbench">
+            <form id="style-form" class="style-controls">
+              <fieldset><legend>你对肤色倾向的感受</legend><div class="choice-grid"><label><input type="radio" name="undertone" value="warm" /><span>偏暖</span></label><label><input type="radio" name="undertone" value="cool" /><span>偏冷</span></label><label><input type="radio" name="undertone" value="neutral" checked /><span>中性／不确定</span></label></div></fieldset>
+              <fieldset><legend>这次想穿去哪里</legend><div class="choice-grid"><label><input type="radio" name="occasion" value="commute" checked /><span>通勤</span></label><label><input type="radio" name="occasion" value="casual" /><span>日常</span></label><label><input type="radio" name="occasion" value="social" /><span>约会／社交</span></label></div></fieldset>
+              <fieldset><legend>想要的感觉</legend><div class="choice-grid"><label><input type="radio" name="mood" value="clean" checked /><span>清爽克制</span></label><label><input type="radio" name="mood" value="soft" /><span>柔和松弛</span></label><label><input type="radio" name="mood" value="bold" /><span>鲜明有力量</span></label></div></fieldset>
+              <button class="primary-button full" type="submit">生成三组尝试方向</button>
+            </form>
+            <div id="palette-results" class="palette-results"></div>
+          </div>
+          <p class="method-note">配色结果用于帮助尝试，不对肤色或审美作等级判断。屏幕显示、光线和面料光泽都会影响实际颜色。</p>
+        </section>
+
+        <section class="page" data-page="wardrobe" aria-labelledby="wardrobe-title" hidden>
+          <header class="page-header">
+            <div><p class="eyebrow">Wear log</p><h1 id="wardrobe-title">我的衣橱</h1><p>不只记“买过什么”，更要记下穿在哪里、哪里舒服，以及为什么愿意再次选择。</p></div>
+            <button id="add-record" class="primary-button" type="button">添加一件记录</button>
+          </header>
+
+          <div class="wardrobe-summary" id="wardrobe-summary"></div>
+          <div class="toolbar wardrobe-toolbar">
+            <label class="field grow"><span>搜索记录</span><input id="wardrobe-search" type="search" placeholder="名称、品牌或材质" /></label>
+            <label class="field"><span>品类</span><select id="wardrobe-filter"><option value="all">全部</option><option value="top">上衣</option><option value="pants">裤装</option><option value="shoes">鞋子</option><option value="other">其他</option></select></label>
+            <button id="export-data" class="secondary-button align-end" type="button">导出备份</button>
+            <label class="secondary-button file-button align-end">导入备份<input id="import-data" type="file" accept="application/json" /></label>
+          </div>
+          <div id="wardrobe-list" class="wardrobe-list" aria-live="polite"></div>
+        </section>
+
+        <section class="page" data-page="profile" aria-labelledby="profile-title" hidden>
+          <header class="page-header compact-header">
+            <div><p class="eyebrow">Personal notes</p><h1 id="profile-title">个人档案</h1><p>只填写愿意记录的部分。身体测量、成衣尺寸与主观偏好会分别保存。</p></div>
+          </header>
+
+          <form id="profile-form" class="profile-grid">
+            <section class="profile-card">
+              <p class="card-kicker">01 · 可选测量</p><h2>身体尺寸</h2><p class="helper">单位均为厘米。未知的字段可以留空。</p>
+              <div class="input-grid"><label class="field"><span>身高</span><input name="height" type="number" min="80" max="230" step="0.1" /></label><label class="field"><span>胸围</span><input name="bust" type="number" min="40" max="200" step="0.1" /></label><label class="field"><span>腰围</span><input name="waist" type="number" min="30" max="200" step="0.1" /></label><label class="field"><span>臀围</span><input name="hip" type="number" min="40" max="220" step="0.1" /></label><label class="field"><span>脚长</span><input name="footLength" type="number" min="10" max="40" step="0.1" /></label><label class="field"><span>测量日期</span><input name="measuredAt" type="date" /></label></div>
+            </section>
+            <section class="profile-card">
+              <p class="card-kicker">02 · 穿着习惯</p><h2>我的偏好</h2>
+              <label class="field"><span>常用昵称</span><input name="nickname" type="text" placeholder="选填" /></label>
+              <label class="field"><span>喜欢的松紧感</span><select name="fitPreference"><option value="">暂不确定</option><option value="贴身">贴身</option><option value="合体">合体</option><option value="宽松">宽松</option></select></label>
+              <label class="field"><span>打理偏好</span><select name="carePreference"><option value="">暂不确定</option><option value="省心机洗">省心机洗</option><option value="可以熨烫">可以熨烫</option><option value="接受特殊洗护">接受特殊洗护</option></select></label>
+              <fieldset><legend>常见使用场景</legend><div class="check-row"><label><input type="checkbox" name="scenarios" value="通勤" />通勤</label><label><input type="checkbox" name="scenarios" value="日常" />日常</label><label><input type="checkbox" name="scenarios" value="居家" />居家</label><label><input type="checkbox" name="scenarios" value="运动" />运动</label></div></fieldset>
+            </section>
+            <section class="profile-card profile-wide">
+              <p class="card-kicker">03 · 在意的体验</p><h2>什么会影响你的选择</h2>
+              <div class="preference-sliders">
+                <label><span>怕闷热</span><input name="heatSensitivity" type="range" min="1" max="5" value="3" /><output>3</output></label>
+                <label><span>怕扎肤</span><input name="itchSensitivity" type="range" min="1" max="5" value="3" /><output>3</output></label>
+                <label><span>在意起皱</span><input name="wrinkleConcern" type="range" min="1" max="5" value="3" /><output>3</output></label>
+              </div>
+              <label class="field"><span>其他偏好或禁忌</span><textarea name="notes" rows="3" placeholder="例如：夏天不喜欢贴在皮肤上的面料；裤脚希望刚好盖住鞋面。"></textarea></label>
+            </section>
+            <div class="profile-actions"><button class="primary-button" type="submit">保存个人档案</button><span id="profile-status" role="status"></span></div>
+          </form>
+
+          <section class="data-controls section-block" aria-labelledby="data-title">
+            <div><h2 id="data-title">本地数据管理</h2><p>清除后无法从当前浏览器恢复，请先导出备份。</p></div>
+            <button id="clear-data" class="danger-button" type="button">清除我的全部数据</button>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="material-dialog" class="dialog material-dialog">
+      <button class="dialog-close" type="button" aria-label="关闭">×</button>
+      <div id="material-dialog-content"></div>
+    </dialog>
+
+    <dialog id="record-dialog" class="dialog record-dialog">
+      <form id="record-form" method="dialog">
+        <div class="dialog-heading"><div><p class="eyebrow">Wear log</p><h2 id="record-dialog-title">添加一件记录</h2></div><button class="dialog-close" type="button" aria-label="关闭">×</button></div>
+        <input type="hidden" name="id" />
+        <div class="record-form-grid">
+          <label class="field field-wide"><span>名称 *</span><input name="name" type="text" required placeholder="例如：蓝色落肩 T 恤" /></label>
+          <label class="field"><span>品牌</span><input name="brand" type="text" /></label>
+          <label class="field"><span>品类 *</span><select name="category" required><option value="top">上衣</option><option value="pants">裤装</option><option value="shoes">鞋子</option><option value="other">其他</option></select></label>
+          <label class="field"><span>尺码</span><input name="size" type="text" placeholder="M / 38 / 240" /></label>
+          <label class="field"><span>状态</span><select name="status"><option value="owned">已经买过</option><option value="considering">正在考虑</option></select></label>
+          <label class="field field-wide"><span>材质或标签原文</span><input name="material" type="text" placeholder="例如：棉 95%，氨纶 5%" /></label>
+          <div id="record-measurements" class="record-measurements field-wide"></div>
+          <label class="field"><span>场景</span><input name="scenario" type="text" placeholder="夏季通勤" /></label>
+          <label class="field"><span>合身反馈</span><select name="fit"><option value="">暂未记录</option><option value="偏紧">偏紧</option><option value="刚好">刚好</option><option value="偏松">偏松</option><option value="偏短">偏短</option><option value="偏长">偏长</option></select></label>
+          <label class="field"><span>舒适感受</span><select name="comfort"><option value="">暂未记录</option><option value="舒服">舒服</option><option value="一般">一般</option><option value="不舒服">不舒服</option></select></label>
+          <label class="field"><span>是否愿意回购</span><select name="repurchase"><option value="unknown">还不知道</option><option value="yes">愿意</option><option value="no">不愿意</option></select></label>
+          <label class="field field-wide"><span>购买链接</span><input name="link" type="url" placeholder="https://" /></label>
+          <label class="field field-wide"><span>试穿、洗后表现与原因</span><textarea name="notes" rows="4" placeholder="例如：肩膀刚好，洗两次后衣长没有明显变化；室内穿不闷。"></textarea></label>
+        </div>
+        <div class="dialog-actions"><button class="ghost-button" type="button" data-cancel-record>取消</button><button class="primary-button" type="submit">保存记录</button></div>
+      </form>
+    </dialog>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
